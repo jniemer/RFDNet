@@ -17,7 +17,7 @@ seed = 1
 upscale_factor = 4
 batch_size = 8
 
-epochs = 10
+epochs = 20
 
 
 def load_images(orig_size, small_size, orig_dir, small_dir):
@@ -92,15 +92,15 @@ test_img_paths = sorted(
         if fname.endswith(".png")
     ]
 )
+val_batch_count = len(test_img_paths) / batch_size
+
 train_path = "/content/datasets/faces/X4/train"
-train_imgs = [
+train_img_paths = [
     os.path.join(train_path, fname)
     for fname in os.listdir(train_path)
     if fname.endswith(".png")
 ]
-batch_count = len(train_imgs) / batch_size
-batch_count = 10
-print(round(batch_count))
+train_batch_count = len(train_img_paths) / batch_size
 
 #count = 0
 #dataset = train_ds.enumerate()
@@ -145,7 +145,7 @@ model.compile(
 print("Training model...")
 model.fit(
     train_ds, epochs=epochs, callbacks=callbacks, validation_data=val_ds, 
-    steps_per_epoch=batch_count, validation_steps=2, 
+    steps_per_epoch=train_batch_count, validation_steps=val_batch_count, 
     verbose=1,
 )
 print('done!')

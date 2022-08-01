@@ -143,9 +143,9 @@ model.compile(
     optimizer=optimizer, loss=loss_fn,
 )
 print("Training model...")
-model.fit_generator(
-    train_ds, epochs=epochs, callbacks=callbacks, #validation_data=val_ds, 
-    steps_per_epoch=batch_count, #validation_steps=20, 
+model.fit(
+    train_ds, epochs=epochs, callbacks=callbacks, validation_data=val_ds, 
+    steps_per_epoch=batch_count, validation_steps=2, 
     verbose=1,
 )
 print('done!')

@@ -74,15 +74,15 @@ def load_images(orig_size, small_size, orig_dir, small_dir):
     # Drop extra dimension
     return dataset.map(dimension_adjuster, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
-train_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="./images/original", small_dir="./images/X4")
-#val_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="./images_val/original", small_dir="./images_val/X4")
+train_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces/original", small_dir="/content/datasets/faces/X4")
+val_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces_val/original", small_dir="/content/datasets/faces_val/X4")
 
-test_path = "./images_val/X4"
+test_path = "/content/dataset/faces_val/X4"
 test_img_paths = sorted(
     [
         os.path.join(test_path, fname)
         for fname in os.listdir(test_path)
-        if fname.endswith(".jpg")
+        if fname.endswith(".png")
     ]
 )
 
@@ -107,7 +107,7 @@ early_stopping_callback = keras.callbacks.EarlyStopping(monitor="loss", patience
 checkpoint_filepath = "weights"
 
 model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
-    checkpoint_filepath + '/best.h5',
+    checkpoint_filepath + '/content/RFDNet/best.h5',
     monitor="loss",
     mode="min",
     save_best_only=True,

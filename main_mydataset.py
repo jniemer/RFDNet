@@ -51,7 +51,7 @@ def load_images(orig_size, small_size, orig_dir, small_dir):
     ), "ensure equal number of input and output images"
 
     # combine generators into one which yields input-output pair
-    combined_generator = zip(generator1, generator2)
+    combined_generator = zip(generator2, generator1)
     print(generator1.filenames)
     print(generator2.filenames)
 
@@ -63,7 +63,7 @@ def load_images(orig_size, small_size, orig_dir, small_dir):
         ),
     )
 
-    dataset = dataset.batch(batch_size)
+    #dataset = dataset.batch(batch_size)
 
     def dimension_adjuster(
         *inputs: Tuple[tf.Tensor, tf.Tensor]
@@ -71,11 +71,20 @@ def load_images(orig_size, small_size, orig_dir, small_dir):
         img1, img2 = inputs
         return tf.squeeze(img1, axis=1) / 255.0, tf.squeeze(img2, axis=1) / 255.0
 
+    def scaling(
+        *inputs: Tuple[tf.Tensor, tf.Tensor]
+    ) -> Tuple[tf.Tensor, tf.Tensor]:
+        img1, img2 = inputs
+        return img1 / 255.0, img2 / 255.0
+
     # Drop extra dimension
-    return dataset.map(dimension_adjuster, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    #return dataset.map(dimension_adjuster, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    return dataset.map(scaling)
 
 train_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces/original", small_dir="/content/datasets/faces/X4")
 val_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces_val/original", small_dir="/content/datasets/faces_val/X4")
+
+print(train_ds.cardinality().numpy())
 
 test_path = "/content/datasets/faces_val/X4/train"
 test_img_paths = sorted(
@@ -86,8 +95,12 @@ test_img_paths = sorted(
     ]
 )
 
-#dataset = dataset.enumerate()
-#for element in dataset:
+count = 0
+dataset = train_ds.enumerate()
+for element in dataset:
+  count += 1
+  if count % 10 == 0:
+    print(count)
 #    img = element[1][0][0]
 #    fig, ax = plt.subplots()
 #    img = ax.imshow(img)
@@ -100,7 +113,7 @@ rfanet_x = RFDNNet()
 x = Input(shape=(None, None, 3))
 out = rfanet_x.main_model(x, upscale_factor)
 model = Model(inputs=x, outputs=out)
-model.summary()
+#model.summary()
 
 early_stopping_callback = keras.callbacks.EarlyStopping(monitor="loss", patience=10)
 
@@ -123,9 +136,9 @@ model.compile(
     optimizer=optimizer, loss=loss_fn,
 )
 print("Training model...")
-model.fit(
-    train_ds, epochs=epochs, callbacks=callbacks, #validation_data=val_ds, 
-    verbose=2
-)
+#model.fit(
+#    train_ds, epochs=epochs, callbacks=callbacks, #validation_data=val_ds, 
+#    batch_size=batch_size, verbose=1
+#)
 print('done!')
 

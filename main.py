@@ -5,9 +5,9 @@ import tensorflow as tf
 
 from model import RFDNNet
 from tensorflow import keras
-from IPython.display import display
 from tensorflow.keras import Input, Model
 from tensorflow.keras.preprocessing import image_dataset_from_directory
+from tensorflow.keras.preprocessing.image import ImageDataset
 
 from utils import *
 

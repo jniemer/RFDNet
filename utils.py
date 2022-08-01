@@ -93,7 +93,7 @@ def upscale_image(model, img):
 class ESPCNCallback(keras.callbacks.Callback):
     def __init__(self, test_img_paths):
         super(ESPCNCallback, self).__init__()
-        self.test_img = get_lowres_image(load_img(test_img_paths[0]), upscale_factor)
+        self.test_img = load_img(test_img_paths[0])
 
     # Store PSNR value in each epoch.
     def on_epoch_begin(self, epoch, logs=None):

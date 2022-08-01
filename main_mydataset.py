@@ -77,7 +77,7 @@ def load_images(orig_size, small_size, orig_dir, small_dir):
 train_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces/original", small_dir="/content/datasets/faces/X4")
 val_ds = load_images(orig_size = 1024, small_size = 256, orig_dir="/content/datasets/faces_val/original", small_dir="/content/datasets/faces_val/X4")
 
-test_path = "/content/dataset/faces_val/X4"
+test_path = "/content/datasets/faces_val/X4/train"
 test_img_paths = sorted(
     [
         os.path.join(test_path, fname)

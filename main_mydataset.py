@@ -117,7 +117,7 @@ train_batch_count = len(train_img_paths) / batch_size
 print("Data loaded, creating model")
 
 rfanet_x = RFDNNet()
-x = Input(shape=(None, None, 3))
+x = Input(shape=(256, 256, 3)) #Input(shape=(None, None, 3))
 out = rfanet_x.main_model(x, upscale_factor)
 model = Model(inputs=x, outputs=out)
 #model.summary()
